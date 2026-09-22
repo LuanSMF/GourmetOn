@@ -38,7 +38,39 @@ function App() {
         return true;
       }
       return receitas.categoria === categoriaSelecionada;
-    }); 
+    });
+
+      const [email, setEmail] = useState('');
+      const [bancoEmails, setBancoEmails] = useState(() => {
+          try{
+            const salvos = localStorage.getItem('banco_emails');
+            return salvos ? JSON.parse(salvos) : [];
+          }catch(error){
+            console.error('Erro ao ler do localStorage:',error);
+            return[]
+          }
+      });
+
+      useEffect(()=> {
+        try{
+          localStorage.setItem('banco_emails', JSON.stringify(bancoEmails))
+        }catch(error){
+          console.error('Erro ao salvar no localStorage:', error);
+        }
+      },[bancoEmails]);
+
+      const handleEnviar = (e) => {
+        e.preventDefault();
+
+        const emailLimpo = email.trim();
+        if(!emailLimpo) return;
+
+        setBancoEmails((emailsAnteriores) => [...emailsAnteriores, emailLimpo]);
+        
+        setEmail('');
+      };
+
+    
 
   return (
     <>
@@ -87,13 +119,20 @@ function App() {
             </section>
         </section>
         <section>
-
-        </section>
-        <footer>
           <h4>Uma Oferta gostosa na sua caixa de entrada.</h4>
           <span>Cadastre seu e-mail para receber novidades e promoções</span>
-          <input placeholder='Seu melhor e-mail' id='email'></input>
-          <button onClick={()=> salvarDados()}>Cadastrar ➡</button>
+          <form onSubmit={handleEnviar}>
+            <input
+              type="email"
+              placeholder="Digite seu melhor e-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <button type="submit">Enviar</button>
+          </form>
+        </section>
+        <footer>
         </footer>
     </>
   )
