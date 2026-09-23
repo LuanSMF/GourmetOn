@@ -349,6 +349,55 @@ function App() {
         
       </section>
 
+
+      <section
+        id="Avaliacoes"
+        className="bg-[#FFFCF7] px-6 md:px-16 lg:px-20 py-20">
+        <div className="max-w-7xl mx-auto">
+
+          <p className="text-[#FF6648] font-bold text-sm">
+            QUEM PROVA, RECOMENDA
+          </p>
+
+          <h2 className="text-3xl md:text-4xl font-extrabold text-[#173F32] mt-3">
+            Comida boa também rende histórias
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+
+            <article className="bg-[#F4F1EA] rounded-3xl p-8">
+              <div className="text-[#F5A623] text-xl">
+                ★★★★★
+              </div>
+
+              <p className="text-lg text-[#173F32] mt-4">
+                “A comida é uma delícia e a entrega foi super rápida! Amei!”
+              </p>
+
+              <span className="block text-[#6B756F] mt-2">
+                Marina A.
+              </span>
+            </article>
+
+            <article className="bg-[#F4F1EA] rounded-3xl p-8">
+              <div className="text-[#F5A623] text-xl">
+                ★★★★★
+              </div>
+
+              <p className="text-lg text-[#173F32] mt-4">
+                “O app é simples e os pratos são ótimos, com certeza pedirei novamente.”
+              </p>
+
+              <span className="block text-[#6B756F] mt-2">
+                Rafael M.
+              </span>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+
       <section
         id="Contato"
         className="bg-[#FFFCF7] px-6 md:px-16 lg:px-20 py-20">
