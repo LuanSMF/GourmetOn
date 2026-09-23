@@ -11,20 +11,27 @@ app.use(cors());
 app.get("/api/receitas", async(req, res) => {
     try{
      const url=new URL("https://api.spoonacular.com/recipes/complexSearch");
-     url.searchParams.set("query", req.query.query || "pasta");
-     url.searchParams.set("number", "10");
+     const categoria = req.query.categoria || "Todos";
 
+    if (categoria === "Massas") {
+    url.searchParams.set("query", "pasta");
+    } else if (categoria === "Sobremesas") {
+    url.searchParams.set("type", "dessert");
+    } else if (categoria === "Saudáveis") {
+    url.searchParams.set("maxCalories", "500");
+    url.searchParams.set("maxFat", "20");
+    }
+    console.log("Categoria recebida:", categoria);
+    console.log("Busca enviada:", url.toString());
      const resposta = await fetch(url, {
         headers:{"x-api-key": process.env.CHAVES},
      });
 
-    const dados = await resposta.json();
-
-    if (!resposta.ok) {
-    console.log("Spoonacular status:", resposta.status);
-    console.log("Spoonacular erro:", dados.message);
-    return res.status(502).json({ erro: "Falha ao buscar receitas" });
+    if(!resposta.ok){
+        return res.status(502).json({erro: "Falha ao buscar receitas"});
     }
+
+     const dados = await resposta.json();
      const receitas = dados.results ?? [];
 
      if(receitas.length === 0){
@@ -54,7 +61,7 @@ app.get("/api/receitas", async(req, res) => {
      const traducao = await respostaTraducao.json();
 
      dados.results = receitas.map((receita,indice) => ({
-        ...receita,title:traducao.data.translations[indice].transatedText,
+        ...receita,title:traducao.data.translations[indice].translatedText,
      }));
 
      res.json(dados);

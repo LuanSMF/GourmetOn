@@ -5,14 +5,17 @@ function App() {
   const [receitas,setReceitas] = useState([]);
   const [carregando,setCarregando] = useState(true);
   const [erro,setErro] = useState("");
-  const [mensagem, setMensagem] =useState("")
+  const [mensagem, setMensagem] =useState("");
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState("Todos");
 
   useEffect(() => {
+    console.log("Aba selecionada:", categoriaSelecionada);
+    
     async function carregarReceitas() {
       try{
         const url = import.meta.env.DEV
-          ? "http://localhost:3001/api/receitas?query=pasta"
-          : "/api/receitas?query=pasta";
+          ? `http://localhost:3001/api/receitas?categoria=${encodeURIComponent(categoriaSelecionada)}`
+          : `/api/receitas?categoria=${encodeURIComponent(categoriaSelecionada)}`;
         const resposta= await fetch(url)
         //const resposta = await fetch("/receitas.json")
 
@@ -21,6 +24,7 @@ function App() {
         }
 
         const dados = await resposta.json();
+        console.log("IDs recebidos:", dados.results?.map((receita) => receita.id));
         setReceitas(dados.results ?? []);
       }catch(erroCapturado){
         setErro(erroCapturado.message);
@@ -29,16 +33,7 @@ function App() {
       }
     }
     carregarReceitas();
-  },[]);
-
- const [categoriaSelecionada, setCategoriaSelecionada] = useState("Todos");
-    
-    const receitasFiltradas = receitas.filter((receitas) =>{
-      if(categoriaSelecionada ==="Todos"){
-        return true;
-      }
-      return receitas.categoria === categoriaSelecionada;
-    });
+  },[categoriaSelecionada]);
 
       const [email, setEmail] = useState('');
       const [bancoEmails, setBancoEmails] = useState(() => {
@@ -260,7 +255,10 @@ function App() {
             </button>
 
             <button
-              onClick={() => setCategoriaSelecionada("Massas")}
+              onClick={() => {
+                console.log("Cliquei em Massas");
+                setCategoriaSelecionada("Massas");
+              }}
               className={`px-6 py-3 rounded-full font-bold transition ${
                 categoriaSelecionada === "Massas"
                   ? "bg-[#173F32] text-white"
@@ -270,9 +268,12 @@ function App() {
             </button>
 
             <button
-              onClick={() => setCategoriaSelecionada("Saudaveis")}
+              onClick={() => {
+                console.log("Saudáveis");
+                setCategoriaSelecionada("Saudáveis");
+              }}
               className={`px-6 py-3 rounded-full font-bold transition ${
-                categoriaSelecionada === "Saudaveis"
+                categoriaSelecionada === "Saudáveis"
                   ? "bg-[#173F32] text-white"
                   : "bg-white text-[#173F32]"
               }`}>
@@ -280,7 +281,10 @@ function App() {
             </button>
 
             <button
-              onClick={() => setCategoriaSelecionada("Sobremesas")}
+              onClick={() => {
+                console.log("Sobremesas");
+                setCategoriaSelecionada("Sobremesas");
+              }}
               className={`px-6 py-3 rounded-full font-bold transition ${
                 categoriaSelecionada === "Sobremesas"
                   ? "bg-[#173F32] text-white"
@@ -311,7 +315,7 @@ function App() {
           {!carregando && !erro && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-              {receitasFiltradas.map((receita) => (
+              {receitas.map((receita) => (
                 <article
                   key={receita.id}
                   className="bg-white rounded-3xl p-3 hover:-translate-y-1 hover:shadow-lg transition">
@@ -348,55 +352,6 @@ function App() {
         </div>
         
       </section>
-
-
-      <section
-        id="Avaliacoes"
-        className="bg-[#FFFCF7] px-6 md:px-16 lg:px-20 py-20">
-        <div className="max-w-7xl mx-auto">
-
-          <p className="text-[#FF6648] font-bold text-sm">
-            QUEM PROVA, RECOMENDA
-          </p>
-
-          <h2 className="text-3xl md:text-4xl font-extrabold text-[#173F32] mt-3">
-            Comida boa também rende histórias
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
-
-            <article className="bg-[#F4F1EA] rounded-3xl p-8">
-              <div className="text-[#F5A623] text-xl">
-                ★★★★★
-              </div>
-
-              <p className="text-lg text-[#173F32] mt-4">
-                “A comida é uma delícia e a entrega foi super rápida! Amei!”
-              </p>
-
-              <span className="block text-[#6B756F] mt-2">
-                Marina A.
-              </span>
-            </article>
-
-            <article className="bg-[#F4F1EA] rounded-3xl p-8">
-              <div className="text-[#F5A623] text-xl">
-                ★★★★★
-              </div>
-
-              <p className="text-lg text-[#173F32] mt-4">
-                “O app é simples e os pratos são ótimos, com certeza pedirei novamente.”
-              </p>
-
-              <span className="block text-[#6B756F] mt-2">
-                Rafael M.
-              </span>
-            </article>
-
-          </div>
-        </div>
-      </section>
-
 
       <section
         id="Contato"
