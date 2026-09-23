@@ -10,18 +10,18 @@ function App() {
   useEffect(() => {
     async function carregarReceitas() {
       try{
-        //const url = import.meta.env.DEV
-        //  ? "http://localhost:3001/api/receitas?query=pasta"
-        //  : "/api/receitas?query=pasta";
-        //const resposta= await fetch(url)
-        const resposta = await fetch("/receitas.json")
+        const url = import.meta.env.DEV
+          ? "http://localhost:3001/api/receitas?query=pasta"
+          : "/api/receitas?query=pasta";
+        const resposta= await fetch(url)
+        //const resposta = await fetch("/receitas.json")
 
         if(!resposta.ok){
           throw new Error("Não foi possível carregar os produtos.");
         }
 
         const dados = await resposta.json();
-        setReceitas(dados);
+        setReceitas(dados.results ?? []);
       }catch(erroCapturado){
         setErro(erroCapturado.message);
       }finally{
